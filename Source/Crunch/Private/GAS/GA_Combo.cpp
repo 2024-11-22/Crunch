@@ -91,6 +91,7 @@ void UGA_Combo::ComboChangedEventReceived(FGameplayEventData Data)
 	
 	TArray<FName> TagNames;
 	UGameplayTagsManager::Get().SplitGameplayTagFName(EventTag, TagNames);
+
 	NextComboName = TagNames.Last();
 
 	UE_LOG(LogTemp, Warning, TEXT("next combo is now: %s"), *NextComboName.ToString());
