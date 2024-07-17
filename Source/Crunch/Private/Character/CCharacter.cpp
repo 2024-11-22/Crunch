@@ -6,6 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "GAS/CAbilitySystemComponent.h"
 #include "GAS/CAttributeSet.h"
+#include "GAS/CAbilitySystemStatics.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/OverHeadStatsGauge.h"
 // Sets default values
@@ -19,6 +20,8 @@ ACCharacter::ACCharacter()
 	CAttributeSet = CreateDefaultSubobject<UCAttributeSet>("CAttribute Set");
 	OverHeadWidgetComponent = CreateDefaultSubobject<UWidgetComponent>("Over Head Widget Component");
 	OverHeadWidgetComponent->SetupAttachment(GetRootComponent());
+
+	BindGASChangeDelegates();
 }
 
 void ACCharacter::ServerSideInit()
@@ -35,7 +38,7 @@ void ACCharacter::ClientSideInit()
 
 bool ACCharacter::IsLocallyControlledByPlayer() const
 {
-	return GetLocalRole() == ROLE_AutonomousProxy || GetRemoteRole() == ROLE_AutonomousProxy;
+	return GetController() && GetController()->IsLocalPlayerController();
 }
 
 // Called when the game starts or when spawned
@@ -73,6 +76,26 @@ UAbilitySystemComponent* ACCharacter::GetAbilitySystemComponent() const
 	return CAbilitySystemComponent;
 }
 
+void ACCharacter::BindGASChangeDelegates()
+{
+	if (CAbilitySystemComponent)
+	{
+		CAbilitySystemComponent->RegisterGameplayTagEvent(UCAbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ACCharacter::DeathTagUpdated);
+	}
+}
+
+void ACCharacter::DeathTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	if (NewCount != 0)
+	{
+		StartDeathSequence();
+	}
+	else
+	{
+		Respawn();
+	}
+}
+
 void ACCharacter::ConfigureOverHeadStatusWidget()
 {
 	if (!OverHeadWidgetComponent)
@@ -106,5 +129,15 @@ void ACCharacter::UpdateHeadGaugeVisibility()
 		float DistSquared = FVector::DistSquared(GetActorLocation(), LocalPlayerPawn->GetActorLocation());
 		OverHeadWidgetComponent->SetHiddenInGame(DistSquared > HeadStatGaugeVisiblityRangeSquared);
 	}
+}
+
+void ACCharacter::StartDeathSequence()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Dead"));
+}
+
+void ACCharacter::Respawn()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Respawn"));
 }
 
