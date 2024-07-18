@@ -64,6 +64,23 @@ void ACPlayerCharacter::HandleLookInput(const FInputActionValue& InputActionValu
 	AddControllerYawInput(InputVal.X);
 }
 
+void ACPlayerCharacter::OnDead()
+{
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		DisableInput(PlayerController);
+	}
+}
+void ACPlayerCharacter::OnRespawn()
+{
+	APlayerController* PlayerController = GetController<APlayerController>();
+	if (PlayerController)
+	{
+		EnableInput(PlayerController);
+	}
+}
+
 void ACPlayerCharacter::HandleMoveInput(const FInputActionValue& InputActionValue)
 {
 	FVector2D InputVal = InputActionValue.Get<FVector2D>();
