@@ -24,6 +24,7 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
+
 	virtual void BeginPlay() override;
 	virtual void PossessedBy(AController* NewController) override;
 
@@ -99,4 +100,10 @@ public:
 private:
 	UPROPERTY(Replicated)
 	FGenericTeamId TeamID;
+	/**********************************************************************/
+	/*                               AI                                 */
+	/**********************************************************************/
+private:
+	UPROPERTY()
+	class UAIPerceptionStimuliSourceComponent* PerceptionStimuliSourceComponent;
 };
