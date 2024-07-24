@@ -139,3 +139,6 @@ void ACAIController::ForgetActorIfDead(AActor* ActorToForget)
 		}
 	}
 }
+
+
+
