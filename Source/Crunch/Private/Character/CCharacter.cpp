@@ -114,6 +114,7 @@ void ACCharacter::BindGASChangeDelegates()
 	{
 		CAbilitySystemComponent->RegisterGameplayTagEvent(UCAbilitySystemStatics::GetDeadStatTag()).AddUObject(this, &ACCharacter::DeathTagUpdated);
 		CAbilitySystemComponent->RegisterGameplayTagEvent(UCAbilitySystemStatics::GetStunStatTag()).AddUObject(this, &ACCharacter::StunTagUpdated);
+		CAbilitySystemComponent->RegisterGameplayTagEvent(UCAbilitySystemStatics::GetAimStatTag()).AddUObject(this, &ACCharacter::AimTagUpdated);
 	}
 }
 
@@ -143,6 +144,17 @@ void ACCharacter::StunTagUpdated(const FGameplayTag Tag, int32 NewCount)
 		OnRecoverFromStun();
 		StopAnimMontage(StunMontage);
 	}
+}
+
+void ACCharacter::AimTagUpdated(const FGameplayTag Tag, int32 NewCount)
+{
+	SetIsAimming(NewCount != 0);
+}
+
+void ACCharacter::SetIsAimming(bool bIsAimming)
+{
+	bUseControllerRotationYaw = bIsAimming;
+	GetCharacterMovement()->bOrientRotationToMovement = !bIsAimming;
 }
 
 void ACCharacter::ConfigureOverHeadStatusWidget()
