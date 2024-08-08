@@ -37,7 +37,7 @@ void ATargetActor_GroundPick::ConfirmTargetingAndContinue()
 
 	TSet<AActor*> TargetActors;
 
-	IGenericTeamAgentInterface* OwnerTeamInterface = nullptr; ;
+	IGenericTeamAgentInterface* OwnerTeamInterface = nullptr; 
 	if (OwningAbility)
 	{
 		OwnerTeamInterface = Cast<IGenericTeamAgentInterface>(OwningAbility->GetAvatarActorFromActorInfo());
@@ -98,6 +98,11 @@ FVector ATargetActor_GroundPick::GetTargetPoint() const
 	if (!TraceResult.bBlockingHit)
 	{
 		return GetActorLocation();
+	}
+
+	if (bShouldDrawDebug)
+	{
+		DrawDebugSphere(GetWorld(), TraceResult.ImpactPoint, TargetAreaRadius, 32, FColor::Red);
 	}
 
 	return TraceResult.ImpactPoint;
