@@ -36,4 +36,8 @@ private:
 	float KillerRewardPortion = 0.5f;
 
 	TArray<AActor*> GetRewardTargets() const;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Reward")
+	TSubclassOf<UGameplayEffect> RewardEffect;
+	
 };
