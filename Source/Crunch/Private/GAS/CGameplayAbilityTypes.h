@@ -27,6 +27,8 @@ struct FGenericDamgeEffectDef
 	GENERATED_BODY()
 
 public:
+	FGenericDamgeEffectDef();
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UGameplayEffect> DamageEffect;
 
@@ -38,6 +40,8 @@ USTRUCT(BlueprintType)
 struct FHeroBaseStats : public FTableRowBase
 {
 	GENERATED_BODY()
+public:
+	FHeroBaseStats();
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> Class;
