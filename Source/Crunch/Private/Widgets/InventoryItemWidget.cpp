@@ -18,6 +18,11 @@ bool UInventoryItemWidget::IsEmpty() const
 	return !InventoryItem || !(InventoryItem->IsValid());
 }
 
+void UInventoryItemWidget::SetSlotNumber(int NewSlotNumber)
+{
+	SlotNumber = NewSlotNumber;
+}
+
 void UInventoryItemWidget::UpdateInventoryItem(const UInventoryItem* Item)
 {
 	InventoryItem = Item;
@@ -56,6 +61,7 @@ void UInventoryItemWidget::EmptySlot()
 	CooldownCountText->SetVisibility(ESlateVisibility::Hidden);
 	CooldownDurationText->SetVisibility(ESlateVisibility::Hidden);
 }
+
 
 void UInventoryItemWidget::UpdateStackCount()
 {
