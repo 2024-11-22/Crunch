@@ -21,9 +21,9 @@ public:
 	void UpdateInventoryItem(const UInventoryItem* Item);
 	void EmptySlot();
 	FORCEINLINE int GetSlotNumber() const { return SlotNumber; }
+	void UpdateStackCount();
 
 private:
-	void UpdateStackCount();
 	UPROPERTY(EditDefaultsOnly, Category = "Visual")
 	UTexture2D* EmptyTexture;
 
