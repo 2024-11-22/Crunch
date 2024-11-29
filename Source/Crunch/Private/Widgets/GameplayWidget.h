@@ -47,6 +47,9 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	class UShopWidget* ShopWidget;
 
+	UPROPERTY(meta=(BindWidget))
+	class UShopWidget* InventoryWidget;
+
 	UPROPERTY(Transient, meta=(BindWidgetAnim))
 	class UWidgetAnimation* ShopPopupAnimation;
 
