@@ -50,7 +50,6 @@ void AProjectileActor::SetGenericTeamId(const FGenericTeamId& NewTeamID)
 	TeamId = NewTeamID;
 }
 
-
 // Called when the game starts or when spawned
 void AProjectileActor::BeginPlay()
 {
