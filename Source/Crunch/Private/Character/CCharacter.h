@@ -71,6 +71,7 @@ private:
 	void SetIsAimming(bool bIsAimming);
 	virtual void OnAimStateChanged(bool bIsAimming);
 	void MoveSpeedUpdated(const FOnAttributeChangeData& Data);
+	void MoveSpeedAccelerationUpdated(const FOnAttributeChangeData& Data);
 	void MaxHealthUpdated(const FOnAttributeChangeData& Data);
 	void MaxManaUpdated(const FOnAttributeChangeData& Data);
 

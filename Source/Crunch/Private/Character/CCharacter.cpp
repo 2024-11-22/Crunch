@@ -140,6 +140,7 @@ void ACCharacter::BindGASChangeDelegates()
 		CAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UCAttributeSet::GetMoveSpeedAttribute()).AddUObject(this, &ACCharacter::MoveSpeedUpdated);
 		CAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UCAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &ACCharacter::MaxHealthUpdated);
 		CAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UCAttributeSet::GetMaxManaAttribute()).AddUObject(this, &ACCharacter::MaxManaUpdated);
+		CAbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(UCAttributeSet::GetMoveAccelerationAttribute()).AddUObject(this, &ACCharacter::MoveSpeedAccelerationUpdated);
 	}
 }
 
@@ -196,6 +197,11 @@ void ACCharacter::OnAimStateChanged(bool bIsAimming)
 void ACCharacter::MoveSpeedUpdated(const FOnAttributeChangeData& Data)
 {
 	GetCharacterMovement()->MaxWalkSpeed = Data.NewValue;
+}
+
+void ACCharacter::MoveSpeedAccelerationUpdated(const FOnAttributeChangeData& Data)
+{
+	GetCharacterMovement()->MaxAcceleration = Data.NewValue;
 }
 
 void ACCharacter::MaxHealthUpdated(const FOnAttributeChangeData& Data)

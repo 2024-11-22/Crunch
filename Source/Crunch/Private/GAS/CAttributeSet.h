@@ -29,6 +29,8 @@ public:
     ATTRIBUTE_ACCESSORS(UCAttributeSet, AttackDamage)
     ATTRIBUTE_ACCESSORS(UCAttributeSet, Armor)
     ATTRIBUTE_ACCESSORS(UCAttributeSet, MoveSpeed)
+    ATTRIBUTE_ACCESSORS(UCAttributeSet, MoveAcceleration)
+
 	virtual void GetLifetimeReplicatedProps( TArray< class FLifetimeProperty > & OutLifetimeProps ) const override;
 	/**
 	 *	An "On Aggregator Change" type of event could go here, and that could be called when active gameplay effects are added or removed to an attribute aggregator.
@@ -75,6 +77,9 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_MoveSpeed)
 	FGameplayAttributeData MoveSpeed;
 
+	UPROPERTY(ReplicatedUsing = OnRep_MoveAcceleration)
+	FGameplayAttributeData MoveAcceleration;
+
 	UPROPERTY()
 	FGameplayAttributeData CachedHealthPercent;
 
@@ -101,4 +106,7 @@ private:
 
 	UFUNCTION()
 	void OnRep_MoveSpeed(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MoveAcceleration(const FGameplayAttributeData& OldValue);
 };
