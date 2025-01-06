@@ -95,6 +95,9 @@ void ACPlayerCharacter::OnRespawn()
 
 void ACPlayerCharacter::HandleMoveInput(const FInputActionValue& InputActionValue)
 {
+	if (GetIsInFocusMode())
+		return;
+
 	FVector2D InputVal = InputActionValue.Get<FVector2D>();
 	InputVal.Normalize();
 	

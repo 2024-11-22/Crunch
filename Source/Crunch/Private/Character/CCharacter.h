@@ -56,6 +56,7 @@ public:
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void Server_SendGameplayEventToSelf(const FGameplayTag& EventTag, const FGameplayEventData& EventData);
+	FORCEINLINE bool GetIsInFocusMode() const { return bIsInFocusMode; }
 protected:
 	void UpgradeAbilityWithInputID(ECAbilityInputID InputID);
 private:
@@ -63,6 +64,10 @@ private:
 	void DeathTagUpdated(const FGameplayTag Tag, int32 NewCount);
 	void StunTagUpdated(const FGameplayTag Tag, int32 NewCount);
 	void AimTagUpdated(const FGameplayTag Tag, int32 NewCount);
+	void FocusTagUpdated(const FGameplayTag Tag, int32 NewCount);
+
+	bool bIsInFocusMode = false;
+
 	void SetIsAimming(bool bIsAimming);
 	virtual void OnAimStateChanged(bool bIsAimming);
 	void MoveSpeedUpdated(const FOnAttributeChangeData& Data);

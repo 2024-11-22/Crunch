@@ -7,6 +7,8 @@
 #include "GAS/TargetActor_GroundPick.h"
 #include "GAS/TA_Blackhole.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "GAS/CAbilitySystemStatics.h"
 
 void UGA_Blackhole::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
@@ -44,6 +46,8 @@ void UGA_Blackhole::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 void UGA_Blackhole::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	RemoveAimEffect();
+	RemoveFocusEffect();
+
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
@@ -56,6 +60,7 @@ void UGA_Blackhole::PlaceBlackhole(const FGameplayAbilityTargetDataHandle& Targe
 	}
 
 	RemoveAimEffect();
+	AddFocusEffect();
 
 	if (PlayCastBlackholeMontageTask)
 	{
@@ -118,7 +123,15 @@ void UGA_Blackhole::FinalTargetsReceived(const FGameplayAbilityTargetDataHandle&
 	{
 		PlayMontageLocally(FinalBlowMontage);
 	}
+
+	FGameplayCueParameters FinalBlowCueParams;
+	FinalBlowCueParams.Location = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TargetDataHandle, 1).ImpactPoint;
+	FinalBlowCueParams.RawMagnitude = TargetAreaRadius;
+
+	GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(FinalBlowCueTag, FinalBlowCueParams);
+	GetAbilitySystemComponentFromActorInfo()->ExecuteGameplayCue(UCAbilitySystemStatics::GetCameraShakeGameplayCueTag(), FinalBlowCueParams);
 }
+
 
 void UGA_Blackhole::AddAimEffect()
 {
@@ -130,5 +143,18 @@ void UGA_Blackhole::RemoveAimEffect()
 	if (AimEffectHandle.IsValid())
 	{
 		BP_RemoveGameplayEffectFromOwnerWithHandle(AimEffectHandle);
+	}
+}
+
+void UGA_Blackhole::AddFocusEffect()
+{
+	FocusEffectHandle = BP_ApplyGameplayEffectToOwner(FocusEffect);
+}
+
+void UGA_Blackhole::RemoveFocusEffect()
+{
+	if (FocusEffectHandle.IsValid())
+	{
+		BP_RemoveGameplayEffectFromOwnerWithHandle(FocusEffectHandle);
 	}
 }
