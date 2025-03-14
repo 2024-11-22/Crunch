@@ -50,6 +50,9 @@ private:
 	UPROPERTY(meta=(BindWidget))	
 	class UPlayerTeamLayoutWidget* PlayerTeamLayoutWidget;
 
+	UPROPERTY(meta=(BindWidget))	
+	class UButton* StartMatchButton;
+
 	UPROPERTY()
 	class ALobbyPlayerController* LobbyPlayerController;
 
@@ -82,4 +85,6 @@ private:
 	void SpawnCharacterDisplay();
 	void UpdateCharacterDisplay(const FPlayerSelection& PlayerSelection);
 
+	UFUNCTION()
+	void StartMatchButtonClicked();
 };
