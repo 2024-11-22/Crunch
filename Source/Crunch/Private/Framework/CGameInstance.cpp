@@ -5,6 +5,7 @@
 #include "Network/CNetStatics.h"
 #include "Interfaces/OnlineSessionInterface.h"
 #include "Interfaces/OnlineIdentityInterface.h"
+#include "HttpModule.h"
 
 void UCGameInstance::StartMatch()
 {
@@ -101,7 +102,12 @@ void UCGameInstance::LoginCompleted(int NumOfLocalPlayer, bool bWasSuccessful, c
 
 void UCGameInstance::RequestCreateAndJoinSession(const FName& NewSessionName)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Requesting Creat and Join Session: %s"), *(NewSessionName.ToString()))
+	UE_LOG(LogTemp, Warning, TEXT("Requesting Create and Join Session: %s"), *(NewSessionName.ToString()))
+	FHttpRequestRef Request = FHttpModule::Get().CreateRequest();
+	FGuid SessioinSearchId = FGuid::NewGuid();
+
+	FString CoordinatorURL = UCNetStatics::GetCoordinatorURL();
+	UE_LOG(LogTemp, Warning, TEXT("Sending Request Session Creation to URL: %s"), *CoordinatorURL)
 }
 
 void UCGameInstance::CancelSessionCreation()
