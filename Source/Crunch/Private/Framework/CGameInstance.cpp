@@ -136,6 +136,20 @@ void UCGameInstance::RequestCreateAndJoinSession(const FName& NewSessionName)
 void UCGameInstance::CancelSessionCreation()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Canceling Session Creation"))
+	StopAllSessionFindings();
+
+	if (IOnlineSessionPtr SessionPtr = UCNetStatics::GetSessionPtr())
+	{
+		SessionPtr->OnFindSessionsCompleteDelegates.RemoveAll(this);
+		SessionPtr->OnJoinSessionCompleteDelegates.RemoveAll(this);
+	}
+
+	StartGlobalSessionSearch();
+}
+
+void UCGameInstance::StartGlobalSessionSearch()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Starting Global Session Search"))
 }
 
 void UCGameInstance::SessionCreationRequestCompleted(FHttpRequestPtr Request, FHttpResponsePtr Response, bool bConnectedSuccessfully, FGuid SesisonSearchId)
@@ -200,6 +214,14 @@ void UCGameInstance::StopAllSessionFindings()
 void UCGameInstance::StopFindingCreatedSession()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Stop Finding Created Session"))
+	GetWorld()->GetTimerManager().ClearTimer(FindCreatedSesisonTimerHandle);
+	GetWorld()->GetTimerManager().ClearTimer(FindCreatedSesisonTimeoutTimerHanle);
+
+	if (IOnlineSessionPtr SessionPtr = UCNetStatics::GetSessionPtr())
+	{
+		SessionPtr->OnFindSessionsCompleteDelegates.RemoveAll(this);
+		SessionPtr->OnJoinSessionCompleteDelegates.RemoveAll(this);
+	}
 }
 
 void UCGameInstance::StopGlobalSessionSearch()
@@ -240,6 +262,7 @@ void UCGameInstance::FindCreatedSession(FGuid SessionSearchId)
 void UCGameInstance::FindCreatedSessionTimeout()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Find Created Session Timeout Reached"))
+	StopFindingCreatedSession();
 }
 
 void UCGameInstance::FindCreateSessionCompleted(bool bWasSuccessful)
@@ -256,6 +279,21 @@ void UCGameInstance::FindCreateSessionCompleted(bool bWasSuccessful)
 void UCGameInstance::JoinSessionWithSearchResult(const FOnlineSessionSearchResult& SearchResult)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Joining session with Search Result"))
+	IOnlineSessionPtr SessionPtr = UCNetStatics::GetSessionPtr();
+	if (!SessionPtr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can't Find Session Ptr, Cancel Joining"))
+		return;
+	}
+	
+	FString SessionName = "";
+	SearchResult.Session.SessionSettings.Get<FString>(UCNetStatics::GetSessionNameKey(), SessionName);
+
+	const FOnlineSessionSetting* PortSetting = SearchResult.Session.SessionSettings.Settings.Find(UCNetStatics::GetPortKey());
+	int64 Port = 7777;
+	PortSetting->Data.GetValue(Port);
+
+	UE_LOG(LogTemp, Warning, TEXT("Trying to join session: %s, at port: %d"), *(SessionName), Port)
 }
 
 void UCGameInstance::PlayerJoined(const FUniqueNetIdRepl& UniqueId)
